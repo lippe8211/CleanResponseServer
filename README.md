@@ -15,8 +15,8 @@ curl -d '{"username":"lippe8211"}' -X POST "http://localhost:8080/login"
 {"message": "OK mister, you are in"}
 ```
 
-## Configuration
-
+## Configuration (method.url.response)
+```
 METHOD (post, get, put, delete)
   |
   |-----URL MAPPING (e.g login)
@@ -24,7 +24,7 @@ METHOD (post, get, put, delete)
             |------- response (JSON response body)
             |------- responseCode (reponse code)
             |------- responseFile (read JSON response from file instead)
-
+```
 
 Example configuration has some post and get examples. To define a response, you simple define the METHOD follwed by URL matching like a login request url (/login).
 
