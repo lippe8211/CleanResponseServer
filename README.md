@@ -7,7 +7,7 @@ Minimal static webserver for testing etc.
 
 ### Send request to server with CURL
 ```
-curl -d '{"username":"lippe8211"}' -X POST "http://localhost:8080/login"
+curl -d '{"username":"lippe8211"}' -X POST "http://localhost:8080/user/login"
 ```
 
 ### Server responds with following JSON

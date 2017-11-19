@@ -1,12 +1,12 @@
 {
     "post": {
-        "login": {
+        "/messages/all": {
             "response": {
-                "message": "OK mister, you are in"
+                "message": "OK mister, you win"
             },
             "responseCode": 200
         },
-        "user": {
+        "/user/login": {
             "response": {
                 "id": "91744D8FE3D47625D6936012803228A878BB39AE5A56C93D558779031F89A2F5",
                 "token": "74C305E01CED2A11F9B3082E8D42D5981C4F1D7EB7C600C5490C935BD03A6B7B"
@@ -15,8 +15,8 @@
         }
     },
     "get": {
-        "all": {
-            "fileResponse": "big_json_response.json"
+        "/": {
+            "fileResponse": "/tmp/template.json"
         }
     }
 }
