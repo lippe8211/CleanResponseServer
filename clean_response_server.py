@@ -50,11 +50,13 @@ class CleanResponseServer(BaseHTTPRequestHandler):
                     txt = open(json_object["fileResponse"])
                     return_payload = txt.read()
                 elif "response" in json_object:
-                    return_payload = json_object["response"]
-                if "code" in json_object:
-                    return_code = json_file["code"]
+                    json_dictionary = json_object["response"]
+                    return_payload = json.dumps(json_dictionary)
+                if "responseCode" in json_object:
+                    return_code = json_object["responseCode"]
 
             print " [INFO] %s %s" % (method, search_path)
+            print " [PAYLOAD] \n%s\n" % (return_payload)
             self.set_response_headers(responseCode = return_code)
             self.wfile.write(return_payload)
         except IOError:
