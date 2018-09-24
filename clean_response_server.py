@@ -4,6 +4,7 @@
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import json
 from urlparse import urlparse
+import time
 
 PORT_NUMBER = 8080
 CONFIG_FILE = 'clean_response_config.json'
@@ -22,9 +23,12 @@ class CleanResponseServer(BaseHTTPRequestHandler):
     def do_DELETE(self):
         self.create_json_response('delete')
 
-    def set_response_headers(self, responseCode = 200):
+    def set_response_headers(self, responseCode=200):
         self.send_response(responseCode)
-        self.send_header('Content-type', 'application/json; charset=utf-8')
+        if responseCode == 204:
+            self.send_header('Content-type', 'application/json; charset=utf-8')
+        else:
+            self.send_header('Content-type', 'text/plain; charset=utf-8')
         self.end_headers()
 
     def default_response(self):
@@ -37,12 +41,11 @@ class CleanResponseServer(BaseHTTPRequestHandler):
         try:
             json_file = json.load(open(CONFIG_FILE))
             json_post_object = json_file[method]
-
             return_payload = self.default_response()
             return_code = self.default_response_code()
-
             search_path = urlparse(self.path).path
 
+            time.sleep(0.2)
 
             if search_path in json_post_object:
                 json_object = json_post_object[search_path]
@@ -55,12 +58,16 @@ class CleanResponseServer(BaseHTTPRequestHandler):
                 if "responseCode" in json_object:
                     return_code = json_object["responseCode"]
 
+            self.set_response_headers(responseCode=return_code)
+            self.wfile.write(return_payload)
+
             print " [INFO] %s %s" % (method, search_path)
             print " [PAYLOAD] \n%s\n" % (return_payload)
-            self.set_response_headers(responseCode = return_code)
-            self.wfile.write(return_payload)
+
         except IOError:
-            self.send_error(404, ' [FAIL] Path (%s.%s) not found in JSON' % (method, self.path))
+            self.send_error(
+                404, ' [FAIL] Path (%s.%s) not found in JSON' % (method, self.path))
+
 
 if __name__ == "__main__":
     try:
