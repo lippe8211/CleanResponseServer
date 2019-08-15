@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
+from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
-from urlparse import urlparse
+from urllib.parse import urlparse
 import time
 
 PORT_NUMBER = 8080
@@ -59,25 +59,25 @@ class CleanResponseServer(BaseHTTPRequestHandler):
                     return_code = json_object["responseCode"]
 
             self.set_response_headers(responseCode=return_code)
-            self.wfile.write(return_payload)
+            self.wfile.write(bytes(return_payload, 'utf-8'))
 
-            print " [INFO] %s %s" % (method, search_path)
-            print " [PAYLOAD] \n%s\n" % (return_payload)
+            print(f" [INFO] {method} {search_path}")
+            print(f" [PAYLOAD] \n{return_payload}\n")
 
         except IOError:
             self.send_error(
-                404, ' [FAIL] Path (%s.%s) not found in JSON' % (method, self.path))
+                404, f' [FAIL] Path ({method}.{self.path}) not found in JSON')
 
 
 if __name__ == "__main__":
     try:
         server = HTTPServer(('', PORT_NUMBER), CleanResponseServer)
 
-        print ' [OK] Clean Response Server started...'
-        print ' [INFO] PORT: %d' % (PORT_NUMBER)
-        print ' [INFO] Config file: %s\n\n' % (CONFIG_FILE)
+        print(' [OK] Clean Response Server started...')
+        print(f' [INFO] PORT: {PORT_NUMBER}')
+        print(f' [INFO] Config file: {CONFIG_FILE}\n\n')
         server.serve_forever()
 
     except KeyboardInterrupt:
-        print '^C received, shutting down the web server'
+        print('^C received, shutting down the web server')
     server.socket.close()
